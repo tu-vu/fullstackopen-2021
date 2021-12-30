@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-const PersonForm = ({ persons, setPersons }) => {
+const PersonForm = ({ personsService, persons, setPersons }) => {
   const [newName, setNewName] = useState("");
   const [newNumber, setNewNumber] = useState("");
 
@@ -16,11 +16,28 @@ const PersonForm = ({ persons, setPersons }) => {
     event.preventDefault();
 
     const duplicatePerson = persons.find((person) => person.name === newName);
+    const newPerson = { ...duplicatePerson, number: newNumber };
 
-    if (duplicatePerson) alert(`${newName} is already added to numberbook`);
-    else {
-      setPersons(persons.concat({ name: newName, number: newNumber }));
+    if (duplicatePerson) {
+      if (
+        window.confirm(
+          `${newPerson.name} is already added to phonebook, replace the old number with a new one?`
+        )
+      ) {
+        personsService.update(newPerson).then((returnedPerson) => {
+          setPersons(
+            persons.map((person) =>
+              person.name === returnedPerson ? returnedPerson : person
+            )
+          );
+        });
+      }
+    } else {
+      personsService.create(newPerson).then((returnedPerson) => {
+        setPersons(persons.concat(returnedPerson));
+      });
     }
+
     setNewName("");
     setNewNumber("");
   };

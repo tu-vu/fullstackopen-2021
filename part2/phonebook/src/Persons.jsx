@@ -1,11 +1,15 @@
 import React from "react";
 import Person from "./Person";
 
-const Persons = ({ filterPersons }) => {
+const Persons = ({ handleDeleteClick, filterPersons }) => {
   return (
     <div>
       {filterPersons.map((person) => (
-        <Person key={person.name} info={person} />
+        <Person
+          handleDeleteClick={handleDeleteClick}
+          key={person.name}
+          person={person}
+        />
       ))}
     </div>
   );
