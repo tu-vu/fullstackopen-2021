@@ -1,6 +1,11 @@
 import React, { useState } from "react";
 
-const PersonForm = ({ personsService, persons, setPersons }) => {
+const PersonForm = ({
+  personsService,
+  persons,
+  setPersons,
+  showNotification,
+}) => {
   const [newName, setNewName] = useState("");
   const [newNumber, setNewNumber] = useState("");
 
@@ -16,7 +21,7 @@ const PersonForm = ({ personsService, persons, setPersons }) => {
     event.preventDefault();
 
     const duplicatePerson = persons.find((person) => person.name === newName);
-    const newPerson = { ...duplicatePerson, number: newNumber };
+    const newPerson = { ...duplicatePerson, name: newName, number: newNumber };
 
     if (duplicatePerson) {
       if (
@@ -35,6 +40,10 @@ const PersonForm = ({ personsService, persons, setPersons }) => {
     } else {
       personsService.create(newPerson).then((returnedPerson) => {
         setPersons(persons.concat(returnedPerson));
+        showNotification({
+          status: "success",
+          message: `Added ${returnedPerson.name}`,
+        });
       });
     }
 

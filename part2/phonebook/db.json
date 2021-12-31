@@ -1,24 +1,19 @@
 {
   "persons": [
     {
-      "name": "Arto Hellas",
-      "number": "23432",
-      "id": 1
-    },
-    {
-      "name": "Ada Lovelace",
-      "number": "39-44-5323523",
-      "id": 2
-    },
-    {
-      "name": "Dan Abramov",
-      "number": "3424322",
-      "id": 3
-    },
-    {
       "name": "Mary Poppendieck",
       "number": "39-23-6423122",
       "id": 4
+    },
+    {
+      "name": "Tu Vu",
+      "number": "244324",
+      "id": 5
+    },
+    {
+      "name": "Trung Nguyen",
+      "number": "42343342",
+      "id": 7
     }
   ]
 }
