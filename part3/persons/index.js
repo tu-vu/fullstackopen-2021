@@ -1,6 +1,13 @@
 const express = require("express");
 const morgan = require("morgan");
+const cors = require("cors");
 const app = express();
+
+// Allows requests from other origins
+app.use(cors());
+
+// Serving static files
+app.use(express.static("build"));
 
 // Parse incoming requests with JSON payload
 app.use(express.json());
@@ -47,6 +54,10 @@ let persons = [
   },
 ];
 
+const unknownEndpoint = (request, response, next) => {
+  response.status(404).send({ error: "Unknown endpoint" });
+};
+
 const generateId = () => {
   return Math.floor(Math.random() * 100);
 };
@@ -62,6 +73,7 @@ app.get("/api/persons", (request, response) => {
   response.json(persons);
 });
 
+// Parameters is defined by using colon
 app.get("/api/persons/:id", (request, response) => {
   const id = Number(request.params.id);
   const person = persons.find((person) => person.id === id);
@@ -103,7 +115,10 @@ app.post("/api/persons", (request, response) => {
   response.json(person);
 });
 
-const PORT = 3001;
+// Middleware here is called only when no routes handle HTTP request
+app.use(unknownEndpoint);
+
+const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
