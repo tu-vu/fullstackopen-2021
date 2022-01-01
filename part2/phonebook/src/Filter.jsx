@@ -17,7 +17,7 @@ const Filter = ({ persons, setFilterPersons }) => {
     } else {
       setFilterPersons(persons);
     }
-  }, [search, persons, setFilterPersons]);
+  }, [search, setFilterPersons, persons]);
 
   return (
     <div>

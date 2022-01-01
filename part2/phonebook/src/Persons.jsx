@@ -7,7 +7,7 @@ const Persons = ({ handleDeleteClick, filterPersons }) => {
       {filterPersons.map((person) => (
         <Person
           handleDeleteClick={handleDeleteClick}
-          key={person.name}
+          key={person.id}
           person={person}
         />
       ))}
