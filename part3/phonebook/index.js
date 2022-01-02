@@ -48,7 +48,7 @@ app.get("/api/persons/:id", (request, response, next) => {
   Person.findById(request.params.id)
     .then((person) => {
       if (person) {
-        response.json(person);
+        response.json(person.toJSON());
       } else {
         response.status(404).end();
       }
@@ -69,41 +69,34 @@ app.delete("/api/persons/:id", (request, response, next) => {
 app.put("/api/persons/:id", (request, response, next) => {
   const body = request.body;
 
-  if (!body.name || !body.number) {
-    return response.status(404).json({
-      error: "The name or number is missing",
-    });
-  }
-
   const person = {
     name: body.name,
     number: body.number,
   };
 
   Person.findByIdAndUpdate(request.params.id, person, { new: true })
-    .then((updatedPerson) => {
-      response.json(updatedPerson);
+    .then((updatedPerson) => updatedPerson.toJSON())
+    .then((updatedAndFormattedPerson) => {
+      response.json(updatedAndFormattedPerson);
     })
     .catch((error) => next(error));
 });
 
-app.post("/api/persons", (request, response) => {
+app.post("/api/persons", (request, response, next) => {
   const body = request.body;
-
-  if (!body.name || !body.number) {
-    return response.status(404).json({
-      error: "The name or number is missing",
-    });
-  }
 
   const person = new Person({
     name: body.name,
     number: body.number,
   });
 
-  person.save().then((savedPerson) => {
-    response.json(savedPerson);
-  });
+  person
+    .save()
+    .then((savedPerson) => savedPerson.toJSON())
+    .then((savedAndFormattedPerson) => {
+      response.json(savedAndFormattedPerson);
+    })
+    .catch((error) => next(error));
 });
 
 // Middleware here is called only when no routes handle HTTP request
@@ -114,6 +107,8 @@ const errorHandler = (error, request, response, next) => {
 
   if (error.name === "CastError") {
     return response.status(400).send({ error: "Malformatted id" });
+  } else if (error.name === "ValidationError") {
+    return response.status(400).json({ error: error.message });
   }
 
   next(error);

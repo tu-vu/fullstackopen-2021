@@ -38,13 +38,21 @@ const PersonForm = ({
         });
       }
     } else {
-      personsService.create(newPerson).then((returnedPerson) => {
-        setPersons(persons.concat(returnedPerson));
-        showNotification({
-          status: "success",
-          message: `Added ${returnedPerson.name}`,
+      personsService
+        .create(newPerson)
+        .then((returnedPerson) => {
+          setPersons(persons.concat(returnedPerson));
+          showNotification({
+            status: "success",
+            message: `Added ${returnedPerson.name}`,
+          });
+        })
+        .catch((error) => {
+          showNotification({
+            status: "error",
+            message: error.response.data.error,
+          });
         });
-      });
     }
 
     setNewName("");
