@@ -1,4 +1,5 @@
 const express = require("express");
+require("express-async-errors"); // no need for try/catch for async call
 const app = express();
 const cors = require("cors");
 const logger = require("./utils/logger");
@@ -10,13 +11,13 @@ const middleware = require("./utils/middleware");
 logger.info(`Connecting to database at ${config.MONGODB_URI}`);
 
 mongoose
-  .connect(config.MONGODB_URI)
-  .then((result) => {
-    logger.info("Connected to MongoDB");
-  })
-  .catch((error) => {
-    logger.error("Error connecting to MongoDB: ", error.message);
-  });
+    .connect(config.MONGODB_URI)
+    .then((result) => {
+        logger.info("Connected to MongoDB");
+    })
+    .catch((error) => {
+        logger.error("Error connecting to MongoDB: ", error.message);
+    });
 
 // Middlewares
 app.use(cors());
